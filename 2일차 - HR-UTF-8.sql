@@ -375,7 +375,7 @@ from employee;
 
 -- TO_CHAR(date,'YYYYMMDD') : 날짜 형식을 'YYYYMMDD'형식으로 출력시 char 타입으로 변환해서 출력
     -- YYYY : 년도
-    -- MM : 월
+    -- MM : 월 , MON <== 월의 이름으로 출력
     -- DD : 일
     -- DAY : 요일의 자세한 정보 (월요일,화요일,...)
     -- DY : 요일 (월,화,수,...)
@@ -438,17 +438,32 @@ where hiredate = to_date('02-22-1981','MM-DD-YYYY')
 select trunc(months_between(sysdate , to_date('2000/12/25','YYYY/MM/DD') )) as 결과
 from dual;
 
+--1207
+--문자열 ('2022-12-07') ==> date타입으로 변환
+select to_date( '2022-12-07','YYYY-MM-DD')
+from dual;
 
+-- 숫자 ==> date 타입으로 변환
+select to_date ('12072022','MMDDYYYY')
+from dual;
 
+--날짜 타입을 원하는 형식의 char타입으로 변환
+select sysdate, to_char(sysdate,'YYYY MON DD DY HH:MI:SS')
+from dual;
 
+--to_number : 문자형 데이터를 숫자형으로 변환
+select 10000-5000
+from dual;
 
+select '10000' - '5000'       --자동으로 변환됨 : 문자열==>숫자형
+from dual;
 
+select '10,000' - '5,000'     -- to_number로 변환이 필요함.
+from dual;
 
-
-
-
-
-
+-- 999,999 = 자리형식
+select to_number ('10,000','99,999') - to_number ( ' 5,000', '9,999') 숫자변환계산
+from dual;
 
 
 
