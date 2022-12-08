@@ -301,7 +301,12 @@ where salary in(
 /* ALL 연산자 : sub query에서 반환하는 모든 값을 비교
     ' > all ': 최대값보다 큼을 나타냄
     ' < all ': 최소값보다 작음을 나타냄
+    
+    A > all B,C,D : A의 값이 B,C,D 중 가장 큰 값보다 크다
+    A < all B,C,D : A의 값이 B,C,D 중 가장 작은 값보다 작다
 */
+
+
 -- 직급이 SALESMAN이 아니면서 직급이 SALESMAN인 사원보다 급여가 적은 모든 사원을 출력
 select * from employee
 order by job asc
@@ -324,4 +329,8 @@ where salary < all (select salary from employee
 '< any'는 최대값 보다 작음을 나타냄
 '> any'는 최소값보다 큼을 나타냄
 '= any'는 IN과 동일함.
+
+A > any B,C,D : A의 값이 B,C,D 중 작은 값보다 크다
+A < any B,C,D : A의 값이 B,C,D 중 큰 값보다 작다
 */
+
