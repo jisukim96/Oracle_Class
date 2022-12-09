@@ -7,7 +7,7 @@
         having group by에서 나온 결과에 대한 조건
         order by 정렬할 컬럼
         
-    DDL(Data Definition Language) : 데이터 정의 언어 , 객체를 생성 , 수정 , 삭제
+    DDL(Data Definition Language) : 데이터 질의 언어 , 객체를 생성 , 수정 , 삭제
             객체(OBJECT) - Table , view , Function , Index , Store Procudure , Triger, USER , ...
         CREATE(생성) , ALTER(수정) , DROP(삭제)
         RENAME(객체이름변경) , TRUNCATE(레코드 삭제)
@@ -76,8 +76,13 @@ values (30,'abc','Daegu');
 select * from dept;
 desc dept;
 
+--암시적으로 NULL이 들어감 < == 컬럼을 선택하지 않을 때
 insert into dept (dno , dname)
 values (30,'abc');
+
+--명시적으로 NULL 넣기 컬럼을 명시하지 않았기 때문에 순서대로 값을 넣어야 함.
+insert into dept
+values(40,'bcd',null);
 
 commit;
 
@@ -91,21 +96,31 @@ create table member (
     weight number (5,2) not null
     );
 
-/* 제약 조건
+/* 제약 조건 : 데이터의 무결성을 확보하기 위해서 테이블의 컬럼에 부여
+            - 무결성 : 오류없는 데이터 , 원하는 데이터
+   
+    -foreign key
      Primary key : 테이블에서 하나만 존재할  수 있음.
-        primary key 가 적용된 컬럼은 중복된 값을 넣을 수 없다.
-        데이터를 수정할 때, 삭제할 때 조건을 사용하는 컬럼.
-        인덱스가 자동으로 생성된다. <== 검색을 빠르게 할 때 사용됨.
-        NULL을 넣을 수 없다.
+      -  primary key 가 적용된 컬럼은 중복된 값을 넣을 수 없다.
+      -  데이터를 수정할 때, 삭제할 때 조건을 사용하는 컬럼.
+      -  인덱스가 자동으로 생성된다. <== 검색을 빠르게 할 때 사용됨.
+      -  NULL을 넣을 수 없다.
         
     Unique : 중복된 값을 넣을 수 없다. 테이블에서 여러번 넣을 수 있다.
-        NULL을 넣을 수 있다. 한번만 넣을 수 있다.
-        인덱스가 자동으로 생성된다. <== 검색을 빠르게 함.
+      -  NULL을 넣을 수 있다. 한번만 넣을 수 있다.
+      -  인덱스가 자동으로 생성된다. <== 검색을 빠르게 함.
         
     check : 값을 넣을 때 체크해서 값을 넣는다.
-        NOT NULL : 컬럼에 NULL을 넣을 수 없다.
+    
+    NOT NULL : 컬럼에 NULL을 넣을 수 없다.
         
 */
+select * from user_constraints; -- 현재 접속한 계정에서 생성된 객체의 모든 제약 조건을 확인
+-- R : foreign key 의 'r'eferences
+
+-- 원하는 테이블의 제약조건 확인
+select * from user_constraints
+where table_name = 'EMPLOYEE';
 
 desc member;
 
