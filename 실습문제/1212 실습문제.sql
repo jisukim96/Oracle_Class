@@ -39,11 +39,33 @@ from employee e, employee m
 where e.manager = m.eno
 order by e.ename asc;
 
+select eno,ename,manager,eno,ename,manager
+from employee
+
 8. OUTER JOIN, SELF JOIN을 사용하여 관리자가 없는 사원을 포함하여 사원번호를 기준으로 내림차순 정렬하여 출력 하시오. 
+-- EQUI JOIN 
 select e.ename 사원명, e.eno 사원번호, m.ename 관리자이름 ,m.eno 관리자번호
 from employee e, employee m
 where e.manager = m.eno (+)
 order by e.eno;
+
+-- ANSI 호환 left
+select e.ename 사원명, e.eno 사원번호, m.ename 관리자이름 ,m.eno 관리자번호
+from employee e left outer join employee m
+on e.manager = m.eno
+order by e.eno;
+
+--ANSI 호환 right
+select e.ename 사원명, e.eno 사원번호, m.ename 관리자이름 ,m.eno 관리자번호
+from employee e right outer join employee m
+on e.manager = m.eno
+order by e.eno;
+
+-- EQUI JOIN 처리
+select e.ename 사원명, e.eno 사원번호, m.ename 관리자이름 ,m.eno 관리자번호
+from employee e , employee m
+where e.manager = m.eno
+order by e.eno desc;
 
 9. SELF JOIN을 사용하여 지정한 사원의 이름(SCOTT), 부서번호, 지정한 사원과 동일한 부서에서 근무하는 사원을 출력하시오. 
    단, 각 열의 별칭은 이름, 부서번호, 동료로 하시오. 
@@ -51,16 +73,32 @@ select e.ename 이름, e.dno 부서번호, m.ename 동료
 from employee e, employee m
 where e.dno = m.dno and e.ename = 'SCOTT' and m.ename <> 'SCOTT';
 
+select e.ename 이름, e.dno 부서번호, m.ename 동료   
+from employee e join employee m
+on e.dno = m.dno 
+where e.ename = 'SCOTT' and m.ename <> 'SCOTT';
+
 10. SELF JOIN을 사용하여 WARD 사원보다 늦게 입사한 사원의 이름과 입사일을 출력하시오. 
 select m.ename 동료  ,m.hiredate 입사일 
 from employee e, employee m
 where e.ename = 'WARD' and m.hiredate > e.hiredate;
 
+
+
+
 11. SELF JOIN을 사용하여 관리자 보다 먼저 입사한 모든 사원의 이름 및 입사일을 관리자 이름 및 입사일과 함께 출력하시오. 
     단, 각 열의 별칭을 한글로 넣어서 출력 하시오. 
+    
 select e.ename 사원명, e.hiredate 사원번호, m.ename 관리자이름 ,m.hiredate 관리자번호
 from employee e, employee m
 where e.manager = m.eno and e.hiredate < m.hiredate;
+
+select e.ename 사원명, e.hiredate 사원번호, m.ename 관리자이름 ,m.hiredate 관리자번호
+from employee e join employee m
+on e.manager = m.eno
+where e.hiredate < m.hiredate;
+
+select eno,ename,hiredate,manager,eno,ename,hiredate,manager from employee;
 
 select * from employee
 <<아래 문제는 모두 Subquery를 사용하여 문제를 푸세요.>>
@@ -80,11 +118,35 @@ select ename 사원이름, job 담당업무 ,salary 급여
 from employee
 where salary = (select min(salary) from employee);
 
-4. 급여가 평균보다 적은 사원의 담당 업무를 찾아 직급과 평균 급여를 표시하시오.
+
+4. 평균 급여가 적은 사원의 담당 업무를 찾아 직급과 평균 급여를 표시하시오.
 select job 담당업무 ,avg(salary) 급여 --, count(*)
 from employee
 where salary < (select round(avg(salary)) from employee)
 group by job;
+
+select job 담당업무, round(avg(salary),0) 평균급여
+from employee
+group by job
+having avg(salary) = (select min(avg(salary))
+                        from employee
+                        group by job);
+
+
+select * --, count(*)
+from employee
+where salary < (select round(avg(salary)) from employee)
+
+select *
+from employee
+group by job
+
+select min(salary) 급여, job 직급
+from employee
+group by job
+having avg(salary)  <= all (select avg(salary)
+                            from employee
+                            group by job);
 
 5. 각 부서의 최소 급여를 받는 사원의 이름, 급여, 부서번호를 표시하시오.
 select ename 이름 ,salary 급여, dno 부서번호 
@@ -98,6 +160,15 @@ where salary < all(select salary from employee where job = 'ANALYST')
         and job <> 'ANALYST';
         
 7. 부하직원이 없는 사원의 이름을 표시 하시오. *
+
+select ename 
+from employee
+where eno not in (select manager from employee)
+
+
+
+
+
 select ename
 from employee
 where eno not in (select distinct(manager) from employee where manager is not null );
@@ -106,6 +177,10 @@ where eno not in (select distinct(manager) from employee where manager is not nu
 select ename
 from employee
 where eno in (select distinct(manager) from employee );
+
+select ename 
+from employee
+where eno in (select manager from employee)
 
 9. BLAKE 와 동일한 부서에 속한 사원의 이름과 입사일을 표시하는 질의를 작성하시오(단, BLAKE 는 제외). 
 select ename 사원명, hiredate 입사일
@@ -129,6 +204,10 @@ select ename 사원명, e.dno 부서번호, job 담당업무 ,loc
 from employee e, department d
 where e.dno = d.dno and 
         loc = (select loc from department where loc = 'DALLAS');
+
+select ename 사원명, dno 부서번호, job 담당업무
+from employee
+where dno in (select dno from department where loc = 'DALLAS');
 
 13. KING에게 보고하는 사원의 이름과 급여를 표시하시오. 
 select ename 사원명, salary 급여
