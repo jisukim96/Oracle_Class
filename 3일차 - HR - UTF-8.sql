@@ -72,7 +72,7 @@ select ename, dno ,
         'DEFAULT') as 부서명
 from employee;
     
---case " if ~ else if,else if와 비슷한 구문
+--case : if ~ else if,else if와 비슷한 구문
 /* 
     case WHEN 조건 1 THEN 결과1
          WHEN 조건 2 THEN 결과2

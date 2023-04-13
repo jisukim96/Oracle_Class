@@ -18,7 +18,7 @@
         GRANT(권한을 부여) , REVOKE(권한 회수)
     
     DQL (Data Query Language) : 데이터 질의 언어 (출력 시) :SELECT
-    DTL ((Data Transaction Control Language) : 트랜젝션 제어 언어
+    TCL (Transaction Control Language) : 트랜젝션 제어 언어
         BEGIN TRANSACTION   <== 트랜잭션 시작 ( INSERT , UPDATE , DELETE <== DML )
         
         COMMIT      <== 트랜잭션을 종료 ( DataBase에 영구저장)
